@@ -19,6 +19,7 @@ def main():
       gameOver = check_win(row, column)
     else:
       print("That column is full. Try again")
+  print("Winner!")
 
 def print_board(): 
   print (" 0 1 2 3 4 5 6 ")
@@ -38,17 +39,25 @@ def check_win(row, column):
     return False
 
 def check_row(row):
+  count = 0
+  for i in range(7):
+    if board[row][i] == "O":
+      count += 1
+    else:
+      count = 0
+    if count >= 4:
+      return True
   return False
 
 def check_column(column):
   count = 0
-  for i in reversed(range(len(board))):
-    if count == 4:
-      return True
-    elif count > 0 and board[i][column] != "O":
+  for i in range(6):
+    if board[i][column] == "O":
+      count += 1
+    else:
       count = 0
-    elif board[i][column] == "O":
-      count = count + 1
+    if count >= 4:
+      return True
   return False
 
 def check_positive_diagonal(row, column):
