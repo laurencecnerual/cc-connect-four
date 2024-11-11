@@ -22,9 +22,9 @@ def main():
   print("Winner!")
 
 def print_board(): 
-  print (" 0 1 2 3 4 5 6 ")
+  print ("  0 1 2 3 4 5 6 ")
   for i in range(len(board)):
-    print("|" + board[i][0] + "|" + board[i][1] + "|" + board[i][2] + "|" + board[i][3] + "|" + board[i][4] + "|" + board[i][5] + "|" + board[i][6] + "|" )
+    print(str(i) + "|" + board[i][0] + "|" + board[i][1] + "|" + board[i][2] + "|" + board[i][3] + "|" + board[i][4] + "|" + board[i][5] + "|" + board[i][6] + "|" )
 
 def get_bottom(column):
   for row in reversed(range(len(board))):
@@ -61,10 +61,49 @@ def check_column(column):
   return False
 
 def check_positive_diagonal(row, column):
+  bottomLeftCorner = get_bottom_left_corner(row, column)
+  topRightCorner = get_top_right_corner(row, column)
+  diagonalRange = topRightCorner[0] - bottomLeftCorner[0]
+  count = 0
+  for i in range(diagonalRange):
+    if board[bottomLeftCorner[0]+i][bottomLeftCorner[1]+i] == "O":
+      count += 1
+    else:
+      count = 0
+    if count >= 4:
+      return True
   return False
 
 def check_negative_diagonal(row, column): 
   return False
+
+def get_bottom_left_corner(row, column):
+  print ("RC: " + str(row) + ", " + str(column))
+  bottommostRow = row
+  leftmostColumn = column
+  while bottommostRow < 5 and leftmostColumn > 0:
+    print("hey")
+    leftmostColumn -= 1
+    bottommostRow += 1
+  print("bottomleft- row, column: " + str(bottommostRow) + ", " + str(leftmostColumn))
+  return [bottommostRow, leftmostColumn]
+
+def get_top_right_corner(row, column):
+  print ("RC: " + str(row) + ", " + str(column))
+  topmostRow = row
+  rightmostColumn = column
+  while topmostRow > 0 and rightmostColumn < 6:
+    print("hey")
+    rightmostColumn += 1
+    topmostRow -= 1
+  print("topright- row, column: " + str(topmostRow) + ", " + str(rightmostColumn))
+  return [topmostRow, rightmostColumn]
+
+def get_top_left_corner(row, column):
+  print("")
+
+def get_bottom_right_corner(row, column):
+  print("")
 
 if __name__ == '__main__':
     main()
