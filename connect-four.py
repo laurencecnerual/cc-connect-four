@@ -1,9 +1,11 @@
 board = [[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "]]
 
 def main():
+  playerToken = "O"
   gameOver = False
   print("Let the games begin!")
   print_board()
+  print("Player 1(O)'s turn")
   while not gameOver:
     isValidColumn = False
     while not isValidColumn:
@@ -14,12 +16,22 @@ def main():
         print("Invalid selection. Try again.")
     row = get_bottom(column)
     if row >= 0:
-      board[row][column] = "O"
+      board[row][column] = playerToken
       print_board()
-      gameOver = check_win(row, column)
+      gameOver = check_win(row, column, playerToken)
+      if not gameOver:
+        if playerToken == "X":
+          playerToken = "O"
+          print("Player One (O) turn")
+        else:
+          playerToken = "X"
+          print("Player Two (X) turn")
     else:
       print("That column is full. Try again")
-  print("Winner!")
+  if playerToken == "O":
+    print("Player One (O) wins!")
+  else:
+    print("Player Two (X) wins!")
 
 def print_board(): 
   print ("  0 1 2 3 4 5 6 ")
@@ -32,16 +44,16 @@ def get_bottom(column):
       return row
   return -1
 
-def check_win(row, column):
-  if check_row(row) or check_column(column) or check_positive_diagonal(row, column) or check_negative_diagonal(row, column):
+def check_win(row, column, playerToken):
+  if check_row(row, playerToken) or check_column(column, playerToken) or check_positive_diagonal(row, column, playerToken) or check_negative_diagonal(row, column, playerToken):
     return True
   else:
     return False
 
-def check_row(row):
+def check_row(row, playerToken):
   count = 0
   for i in range(7):
-    if board[row][i] == "O":
+    if board[row][i] == playerToken:
       count += 1
     else:
       count = 0
@@ -49,10 +61,10 @@ def check_row(row):
       return True
   return False
 
-def check_column(column):
+def check_column(column, playerToken):
   count = 0
   for i in range(6):
-    if board[i][column] == "O":
+    if board[i][column] == playerToken:
       count += 1
     else:
       count = 0
@@ -60,13 +72,13 @@ def check_column(column):
       return True
   return False
 
-def check_positive_diagonal(row, column):
+def check_positive_diagonal(row, column, playerToken):
   bottomLeftCorner = get_bottom_left_corner(row, column)
   topRightCorner = get_top_right_corner(row, column)
   diagonalRange = topRightCorner[0] - bottomLeftCorner[0]
   count = 0
   for i in range(diagonalRange):
-    if board[bottomLeftCorner[0]+i][bottomLeftCorner[1]+i] == "O":
+    if board[bottomLeftCorner[0]+i][bottomLeftCorner[1]+i] == playerToken:
       count += 1
     else:
       count = 0
@@ -74,13 +86,13 @@ def check_positive_diagonal(row, column):
       return True
   return False
 
-def check_negative_diagonal(row, column): 
+def check_negative_diagonal(row, column, playerToken): 
   topLeftCorner = get_top_left_corner(row, column)
   bottomRightCorner = get_bottom_right_corner(row, column)
   diagonalRange = abs(topLeftCorner[0] - bottomRightCorner[0])
   count = 0
   for i in range(diagonalRange):
-    if board[topLeftCorner[0]+i][topLeftCorner[1]+i] == "O":
+    if board[topLeftCorner[0]+i][topLeftCorner[1]+i] == playerToken:
       count += 1
     else:
       count = 0
