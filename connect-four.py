@@ -1,4 +1,11 @@
-board = [[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "],[" "," "," "," "," "," "," "]]
+board = [
+    [" "," "," "," "," "," "," "],
+    [" "," "," "," "," "," "," "],
+    [" "," "," "," "," "," "," "],
+    [" "," "," "," "," "," "," "],
+    [" "," "," "," "," "," "," "],
+    [" "," "," "," "," "," "," "]
+  ]
 
 def main():
   playerToken = "O"
@@ -10,8 +17,12 @@ def main():
     isValidColumn = False
     print("")
     while not isValidColumn:
+      column = input("Choose a column number. Column chosen: ")
+      if column == "quit":
+        print("Match aborted by player request")
+        quit()
       try:
-        column = int(input("Choose a column number. Column chosen: "))
+        column = int(column)
       except:
         print("Please enter the column number only and nothing else.")
         continue
