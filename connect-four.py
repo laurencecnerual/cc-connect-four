@@ -8,16 +8,24 @@ board = [
   ]
 
 def main():
+  playerOneName = input("\nPlayer One - Input your name. Name input: ")
+  if not playerOneName:
+    playerOneName = "Player One"
+  print("\""+ playerOneName+ "\" registered as name")
+  playerTwoName = input("\nPlayer Two - Input your name. Name input: ")
+  if not playerTwoName:
+    playerTwoName = "Player Two"
+  print("\""+ playerTwoName+ "\" registered as name")
   playerToken = "O"
   gameOver = False
-  print("Let the games begin!")
+  print("\nLet the games begin!")
+  print("Input \"quit\" at any time to abort the game\n")
   print_board()
-  print("Player 1(O)'s turn")
+  print(playerOneName + " (O)'s turn")
   while not gameOver:
     isValidColumn = False
-    print("")
     while not isValidColumn:
-      column = input("Choose a column number. Column chosen: ")
+      column = input("\nChoose a column number. Column chosen: ")
       if column == "quit":
         print("Match aborted by player request")
         quit()
@@ -38,16 +46,16 @@ def main():
       if not gameOver:
         if playerToken == "X":
           playerToken = "O"
-          print("Player One (O) turn")
+          print(playerOneName + " (O)'s turn")
         else:
           playerToken = "X"
-          print("Player Two (X) turn")
+          print(playerTwoName + "(X)'s turn")
     else:
       print("That column is full. Try again")
   if playerToken == "O":
-    print("*** Player One (O) wins! ***")
+    print("\n*** " + playerOneName + " (O) wins! ***")
   else:
-    print("*** Player Two (X) wins! ***")
+    print("\n*** " + playerTwoName + " (X) wins! ***")
 
 def print_board(): 
   print ("   0 1 2 3 4 5 6 ")
