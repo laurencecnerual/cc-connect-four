@@ -8,13 +8,17 @@ def main():
   print("Player 1(O)'s turn")
   while not gameOver:
     isValidColumn = False
+    print("")
     while not isValidColumn:
-      column = int(input("Choose a column number. Column chosen: "))
-      print("")
-      if column >= 0 and column <= 6:
-        isValidColumn = True
-      else:
-        print("Invalid selection. Try again.")
+      try:
+        column = int(input("Choose a column number. Column chosen: "))
+      except:
+        print("Please enter the column number only and nothing else.")
+        continue
+      if column < 0 or column > 6:
+        print("Please enter a column number between 0 and 6.")
+        continue
+      isValidColumn = True
     row = get_bottom(column)
     if row >= 0:
       board[row][column] = playerToken
@@ -30,14 +34,14 @@ def main():
     else:
       print("That column is full. Try again")
   if playerToken == "O":
-    print("Player One (O) wins!")
+    print("*** Player One (O) wins! ***")
   else:
-    print("Player Two (X) wins!")
+    print("*** Player Two (X) wins! ***")
 
 def print_board(): 
-  print ("  0 1 2 3 4 5 6 ")
+  print ("   0 1 2 3 4 5 6 ")
   for i in range(len(board)):
-    print(str(i) + "|" + board[i][0] + "|" + board[i][1] + "|" + board[i][2] + "|" + board[i][3] + "|" + board[i][4] + "|" + board[i][5] + "|" + board[i][6] + "|" )
+    print(str(i) + " |" + board[i][0] + "|" + board[i][1] + "|" + board[i][2] + "|" + board[i][3] + "|" + board[i][4] + "|" + board[i][5] + "|" + board[i][6] + "|" )
 
 def get_bottom(column):
   for row in reversed(range(len(board))):
