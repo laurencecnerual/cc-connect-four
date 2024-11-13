@@ -1,3 +1,5 @@
+from browser import document # type: ignore
+
 board = [
     [" "," "," "," "," "," "," "],
     [" "," "," "," "," "," "," "],
@@ -7,75 +9,99 @@ board = [
     [" "," "," "," "," "," "," "]
   ]
 
+answers = []
+playerNames = ["", ""]
+playerToken = ["O"]
+gameOver = [False]
+
+def print_output(text):
+  document["terminal"].text += text + "\n"
+
+def get_input(event): 
+  userInput = document["userInput"].value
+  document["userInput"].value = ""
+  answers.append(userInput)
+
 def main():
-  playerOneName = input("\nPlayer One - Input your name. Name input: ")
-  if not playerOneName:
-    playerOneName = "Player One"
-  print("\""+ playerOneName+ "\" registered as name")
+  print_output("Player One, please input your name")
 
-  playerTwoName = input("\nPlayer Two - Input your name. Name input: ")
-  if not playerTwoName:
-    playerTwoName = "Player Two"
-  print("\""+ playerTwoName+ "\" registered as name")
+  def handle_submission(event):
+    if event.keyCode == 13:
+      get_input(event)
 
-  playerToken = "O"
-  gameOver = False
+      if len(answers) == 1:
+        playerNames[0] = answers[0]
 
-  print("\nLet the games begin!")
-  print("Input \"quit\" at any time to abort the game\n")
-  print_board()
-  print(playerOneName + " (O)'s turn")
+        if not playerNames[0]:
+          playerNames[0] = "Player One"
 
-  while not gameOver:
-    isValidColumn = False
+        print_output("\""+ playerNames[0] + "\" registered as name")
+        
+        print_output("\nPlayer Two, please input your name")
+      elif len(answers) == 2:
+        playerNames[1] = answers[1]
 
-    while not isValidColumn:
-      column = input("\nChoose a column number. Column chosen: ")
+        if not playerNames[1]:
+          playerNames[1] = "Player Two"
+          
+        print_output("\""+ playerNames[1]+ "\" registered as name")
 
-      if column == "quit":
-        print("Match aborted by player request")
-        quit()
+        print_output("\nLet the games begin!")
+        print_output("Input \"quit\" at any time to abort the game\n")
 
-      try:
-        column = int(column)
-      except:
-        print("Please enter the column number only and nothing else.")
-        continue
+        print_board()
+        print_output("\n" + playerNames[0] + " (O)'s turn")
+      elif not gameOver[0]:
+        print_output("\nChoose a column number")
+        column = answers[len(answers)-1]
 
-      if column < 0 or column > 6:
-        print("Please enter a column number between 0 and 6.")
-        continue
+        if column == "quit":
+          print_output("Match aborted by player request\n")
+          gameOver[0] = True
+          return
 
-      isValidColumn = True
+        try:
+          column = int(column)
+        except:
+          print_output("Please enter the column number only and nothing else.")
+          return
 
-    row = get_bottom(column)
+        if column < 0 or column > 6:
+          print_output("Please enter a column number between 0 and 6.")
+          return
 
-    if row >= 0:
-      board[row][column] = playerToken
-      print_board()
-      gameOver = check_win(row, column, playerToken)
+        row = get_bottom(column)
 
-      if not gameOver:
-        if playerToken == "X":
-          playerToken = "O"
-          print(playerOneName + " (O)'s turn")
+        if row >= 0:
+          board[row][column] = playerToken[0]
+          print_board()
+          gameOver[0] = check_win(row, column, playerToken[0])
+
+          if not gameOver[0]:
+            if playerToken[0] == "X":
+              playerToken[0] = "O"
+              print_output("\n" + playerNames[0] + " (O)'s turn")
+            else:
+              playerToken[0] = "X"
+              print_output("\n" + playerNames[1] + " (X)'s turn")
+          else:
+            if playerToken[0] == "O":
+              print_output("\n*** " + playerNames[0] + " (O) wins! ***\n")
+            else:
+              print_output("\n*** " + playerNames[1] + " (X) wins! ***\n")
+
         else:
-          playerToken = "X"
-          print(playerTwoName + " (X)'s turn")
+          print_output("That column is full. Try again")
+      else:
+        print_output("The match is over. Please refresh the page to play again")
 
-    else:
-      print("That column is full. Try again")
-
-  if playerToken == "O":
-    print("\n*** " + playerOneName + " (O) wins! ***")
-  else:
-    print("\n*** " + playerTwoName + " (X) wins! ***")
+  document["userInput"].bind("keydown", handle_submission)
 
 def print_board(): 
-  print ("   0 1 2 3 4 5 6 ")
+  print_output("   0 1 2 3 4 5 6 ")
 
   for i in range(len(board)):
-    print(str(i) + " |" + board[i][0] + "|" + board[i][1] + "|" + board[i][2] + "|" + board[i][3] + "|" + board[i][4] + "|" + board[i][5] + "|" + board[i][6] + "|" )
+    print_output(str(i) + " |" + board[i][0] + "|" + board[i][1] + "|" + board[i][2] + "|" + board[i][3] + "|" + board[i][4] + "|" + board[i][5] + "|" + board[i][6] + "|" )
 
 def get_bottom(column):
   for row in reversed(range(len(board))):
